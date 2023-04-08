@@ -1,18 +1,48 @@
 .red {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
-.green{
-    border: 1px solid green;
+.green {
+  border: 1px solid green;
 }
 
-.yellow{
-    border: 1px solid yellow;
+.yellow {
+  border: 1px solid yellow;
 }
 
-.login-container{
-    .content-right{
-        border: 1px solid red;
-        border-radius: 10px;
+.login-container {
+  background-color: #f0f2f5;
+  padding-top: 20px;
+  min-height: 100vh;
+
+  .content-left {
+    .brand {
+      text-transform: uppercase;
+      font-size: 30px;
+      color: #1877f2;
     }
+  }
+
+  .content-right {
+    .brand {
+      text-transform: uppercase;
+      font-size: 20px;
+      color: #1877f2;
+      text-align: center;
+      font-weight: 600;
+    }
+    border-radius: 10px;
+    background-color: #fff;
+
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+    box-sizing: border-box;
+
+    .forgot-password {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
