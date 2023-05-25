@@ -1,11 +1,11 @@
 import React from "react";
 import "./Login.scss";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Login = (props) => {
   let history = useHistory();
 
-  const handleCreateNewAccount = () =>{
+  const handleCreateNewAccount = () => {
     history.push("/register")
   }
 
@@ -19,7 +19,7 @@ const Login = (props) => {
             <div className="detail">Learning everything</div>
           </div>
           <div className="content-right col-sm-5 col-12 d-flex flex-column gap-3 py-3">
-          <div className="brand d-sm-none">Hai Long</div>
+            <div className="brand d-sm-none">Hai Long</div>
             <input
               type="text"
               className="form-control"

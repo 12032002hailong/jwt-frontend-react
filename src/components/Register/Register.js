@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const Register = (props) => {
   let history = useHistory();
@@ -8,6 +9,12 @@ const Register = (props) => {
   const handleLogin = () => {
     history.push("/login");
   };
+
+  useEffect(() => {
+    axios.get("https://reqres.in/api/users?page=2").then(data => {
+      console.log(">>>check data: ", data)
+    })
+  })
 
   return (
     <div className="register-container">
@@ -59,7 +66,7 @@ const Register = (props) => {
                 placeholder="Re-enter Pasword"
               />
             </div>
-              <button className="btn btn-primary">Register</button>
+            <button className="btn btn-primary">Register</button>
             <hr />
             <div className="text-center">
               <button className="btn btn-success" onClick={() => handleLogin()}>
