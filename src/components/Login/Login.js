@@ -1,15 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.scss";
 import { useHistory } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { loginUser } from "../../services/apiService";
 
 const Login = (props) => {
   let history = useHistory();
+
+  const [valueLogin, setValueLogin] = useState("");
+  const [pasword, setPasword] = useState();
+
+  const defaultObjValidInput = {
+    isValidValueLogin: true,
+    isValidPassword: true,
+  }
+
+  const [objValidInput, setObjValidInput] = useState(defaultObjValidInput);
 
   const handleCreateNewAccount = () => {
     history.push("/register")
   }
 
+  const handleLogin = async () => {
+    setObjValidInput(defaultObjValidInput);
 
+    if (!valueLogin) {
+      setObjValidInput({ ...objValidInput, isValidValueLogin: false });
+      toast.error("Please enter your email or phone number");
+      return;
+    }
+    if (!pasword) {
+      setObjValidInput({ ...objValidInput, isValidPassword: false });
+      toast.error("Please enter your password");
+      return;
+    }
+
+    await loginUser(valueLogin, pasword);
+  }
   return (
     <div className="login-container">
       <div className="container">
@@ -22,15 +49,19 @@ const Login = (props) => {
             <div className="brand d-sm-none">Hai Long</div>
             <input
               type="text"
-              className="form-control"
+              className={objValidInput.isValidValueLogin === true ? "form-control" : "is-invalid form-control"}
               placeholder="Email address or phone number"
+              value={valueLogin}
+              onChange={(event) => { setValueLogin(event.target.value) }}
             />
             <input
               type="password"
-              className="form-control"
+              className={objValidInput.isValidPassword === true ? "form-control" : "is-invalid form-control"}
               placeholder="Password"
+              value={pasword}
+              onChange={(event) => { setPasword(event.target.value) }}
             />
-            <button className="btn btn-primary">Login</button>
+            <button className="btn btn-primary" onClick={() => handleLogin()}>Login</button>
             <span className="text-center">
               <a className="forgot-password" href="#"> Forgot your password?</a>
             </span>
