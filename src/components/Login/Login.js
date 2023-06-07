@@ -8,7 +8,7 @@ const Login = (props) => {
   let history = useHistory();
 
   const [valueLogin, setValueLogin] = useState("");
-  const [pasword, setPasword] = useState();
+  const [password, setPasword] = useState("");
 
   const defaultObjValidInput = {
     isValidValueLogin: true,
@@ -29,13 +29,27 @@ const Login = (props) => {
       toast.error("Please enter your email or phone number");
       return;
     }
-    if (!pasword) {
+    if (!password) {
       setObjValidInput({ ...objValidInput, isValidPassword: false });
       toast.error("Please enter your password");
       return;
     }
 
-    await loginUser(valueLogin, pasword);
+    let respone = await loginUser(valueLogin, password);
+    if (respone && respone.data && +respone.data.EC === 0) {
+      //success
+      let data = {
+        isAuthenticated: true,
+        token: 'fake token'
+      }
+      sessionStorage.setItem('account', JSON.stringify(data));
+
+      history.push('/users')
+    }
+    if (respone && respone.data && +respone.data.EC !== 0) {
+      //error
+      toast.error(respone.data.EM)
+    }
   }
   return (
     <div className="login-container">
@@ -58,7 +72,7 @@ const Login = (props) => {
               type="password"
               className={objValidInput.isValidPassword === true ? "form-control" : "is-invalid form-control"}
               placeholder="Password"
-              value={pasword}
+              value={password}
               onChange={(event) => { setPasword(event.target.value) }}
             />
             <button className="btn btn-primary" onClick={() => handleLogin()}>Login</button>
