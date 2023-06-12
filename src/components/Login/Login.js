@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.scss";
 import { useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -57,8 +57,16 @@ const Login = (props) => {
 
     if (event.charCode === 13 && event.code === "Enter") {
       handleLogin();
+      window.location.reload();
     }
   }
+
+  useEffect(() => {
+    let session = sessionStorage.getItem('account');
+    if (session) {
+      history.push("/")
+    }
+  })
   return (
     <div className="login-container">
       <div className="container">
