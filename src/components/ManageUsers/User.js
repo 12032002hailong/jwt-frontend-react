@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import { fetchAllUser } from '../../services/apiService';
-
+import ReactPaginate from 'react-paginate';
 const User = (props) => {
 
     const [listUser, setlistUser] = useState([]);
-
+    const [currentPage, setcurrentPage] = useState(1);
+    const [currentLimit, setCurrentLimit] = useState(2);
+    const [totalPages, settotalPages] = useState(0);
     useEffect(() => {
         fetchUser();
-    }, []);
+    }, [currentPage]);
 
     const fetchUser = async () => {
-        let res = await fetchAllUser();
+        let res = await fetchAllUser(currentPage, currentLimit);
         if (res && res.data && res.data.EC === 0) {
-            setlistUser(res.data.DT);
-            console.log(res.data.DT)
+            settotalPages(res.data.DT.totalPages);
+            setlistUser(res.data.DT.users);
         }
+    }
+
+    const handlePageClick = async (event) => {
+        setcurrentPage(+event.selected + 1);
+
     }
 
     return (
@@ -39,6 +46,7 @@ const User = (props) => {
                                 <th scope="col">Enail</th>
                                 <th scope="col">Username</th>
                                 <th scope="col">Group</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,7 +60,10 @@ const User = (props) => {
                                                 <td>{item.email}</td>
                                                 <td>{item.username}</td>
                                                 <td>{item.Group ? item.Group.name : ''}</td>
-
+                                                <td>
+                                                    <button className='btn btn-warning'>Edit</button>
+                                                    <button className='btn btn-danger'>Delete</button>
+                                                </td>
 
                                             </tr>
                                         )
@@ -60,23 +71,38 @@ const User = (props) => {
                                 </>
                                 :
                                 <>
-                                    <span>Not found User</span>
+                                    <tr>
+                                        <td>Not found User</td>
+                                    </tr>
                                 </>
                             }
                         </tbody>
                     </table>
                 </div>
-                <div className='user-footer'>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
-                </div>
+                {totalPages > 0 &&
+                    <div className='user-footer'>
+                        <ReactPaginate
+                            previousLabel="Previous"
+                            nextLabel="Next"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            breakLabel="..."
+                            breakClassName="page-item"
+                            breakLinkClassName="page-link"
+                            pageCount={totalPages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={handlePageClick}
+                            containerClassName="pagination"
+                            activeClassName="active"
+                        // forcePage={pageOffset}
+                        />
+                    </div>
+                }
             </div>
         </div>
     )
