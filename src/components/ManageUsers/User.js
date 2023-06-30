@@ -4,6 +4,7 @@ import { deleteUser, fetchAllUser } from '../../services/apiService';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import ModalDelete from './ModalDelete';
+import ModalUser from './ModalUser';
 const User = (props) => {
 
     const [listUser, setlistUser] = useState([]);
@@ -14,6 +15,7 @@ const User = (props) => {
 
     const [show, setShow] = useState(false);
 
+    const [isShowModalUser, setIsShowModalUser] = useState(false)
 
     const handleShow = () => setShow(true);
 
@@ -48,13 +50,17 @@ const User = (props) => {
 
     const confirmDeleteUser = async () => {
         let res = await deleteUser(dataModal);
-        if (res && res.EC === 0) {
+        if (res && res.data.EC === 0) {
             toast.success(res.data.EM);
             await fetchUser();
             setShow(false);
         } else {
             toast.error(res.data.EM)
         }
+    }
+
+    const onHideModalUser = () => {
+        setIsShowModalUser(false);
     }
 
     return (
@@ -67,7 +73,7 @@ const User = (props) => {
                         </div>
                         <div className='actions'>
                             <button className='btn btn-success'>Refesh</button>
-                            <button className='btn btn-primary'>Add new user</button>
+                            <button className='btn btn-primary' onClick={() => { setIsShowModalUser(true) }}>Add new user</button>
                         </div>
                     </div>
                     <div className='user-body'>
@@ -148,6 +154,13 @@ const User = (props) => {
                 handleShow={handleShow}
                 confirmDeleteUser={confirmDeleteUser}
                 dataModal={dataModal}
+            />
+
+
+            <ModalUser
+                title={"Create new user"}
+                onHide={onHideModalUser}
+                show={isShowModalUser}
             />
         </>
     )
